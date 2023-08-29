@@ -136,7 +136,8 @@ int write_f(char* path,FILE* fp){
 	
     printf("entrer des carateres dans le fichier %s  (note vous pouvez renter jusqu'a %d caracteres )  \n ",path,MAX_char);
    
-    scanf("%s",w);
+    //scanf("%s",w);
+	 fgets(w, MAX_char, stdin);
 	fputs(w, fp);
 	
 	
