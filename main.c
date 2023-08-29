@@ -9,7 +9,7 @@ int main (){
 	/** definition des chemins **/
 	
 	char * path_src = "file_usr/source.txt";
-	char * path_dest = "file_usr/dest.txt";
+	char * path_dest = "file_usr/dest.crt";
 	char * path_peroq = "peroq.def";
 	
 	/** initialisations des variables utilisees par le menu **/
