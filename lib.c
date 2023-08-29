@@ -5,23 +5,23 @@ int open_file(char *path, char * resultat,int info){
 	
 	int i = 0;
 	if (info){
-		printf("le chemin : %s",path);
+		printf("le chemin : %s\n",path);
 	}
 	
 	FILE *fp = NULL;
-    fp = fopen (path, "rt");
+    fp = fopen (path, "r+");
 	if (fp == NULL)
     {
-        printf("Erreur Open !");
+         printf("Erreur %s \n",path);
         return EXIT_FAILURE;
     }else{
 		fread(&lettreLu, sizeof(lettreLu), sizeof(char), fp);
 		if (feof(fp))
 		{
-			printf("\nFichier Vide !!!");
-		}
+			printf("\nFichier Vide \n");
+		}else 
 		if (info){
-			printf(" \n Lettre Lu : \n");
+			printf("Lettre Lu : \n");
 		}
 		while(!feof(fp))
 		{	
@@ -35,7 +35,9 @@ int open_file(char *path, char * resultat,int info){
 			
 			if (feof(fp))
 			{
-			//printf("\n\t Fichier Fini !!! \n");
+				if (info){
+					printf("\n");
+				}
 			
 			}
 			
@@ -86,25 +88,48 @@ int getLength(char *tab,int taille){
 	}
 	return l;
 }
-int cryptage(int length_src, int length_peroq, char * tab_pero,char* p,int info){
+int cryptage(int length_src, int length_peroq, char * tab_pero,char* tab_src,char* p,int decrypter ,int info){
 	 FILE *fp = NULL;
 
-    fp = fopen(p, "w+");
+    fp = fopen(p, "w");
     if (fp == NULL)
+    {
+        printf("Erreur %s \n",p);
+        return EXIT_FAILURE;
+    }
+	for (int l = 0 ;l < length_src;l++){
+		int nouvelle_lettre =0;
+			int lettre_peroq = (int) tab_pero[(l%length_peroq)];
+			int lettre_src = (int)tab_src[l];
+			if (info){
+					printf("decrypter : %d\n ",decrypter);
+				}
+			if (decrypter == 0){
+				 nouvelle_lettre = lettre_src-lettre_peroq;
+			}else{
+				 nouvelle_lettre = lettre_src+lettre_peroq;
+			}
+			
+			if (info){
+				
+				printf(" lettre peroq: %c \n ",lettre_peroq);
+				printf(" lettre src: %c \n ",lettre_src);
+				printf("nouvelle lettre %c \n",nouvelle_lettre);
+				printf("\necriture dans %s \n ",p);
+			}
+			char nl = (char) nouvelle_lettre;
+			fwrite(&nl, sizeof(nl), sizeof(char), fp); 
+			
+	}
+	int retClose = fclose(fp);
+    if (retClose!= 0)
     {
         printf("Erreur Open !");
         return EXIT_FAILURE;
     }
-	for (int l = 0 ;l < length_src;l++){
-			char lettre = tab_pero[(l%length_peroq)];
-			if (info){
-				
-				printf("nouvelle lettre : %c \n ",lettre);
-				printf("ecriture dans %s \n ",p);
-			}
-			//fwrite(&lettre, sizeof(lettre), sizeof(char), fp);
-			fwrite(&lettre , 1 , sizeof(lettre) , fp );
-	}
+		return 0;
+
+
 }
 int write_f(char* path,FILE* fp){
 	char w[MAX_char];
@@ -115,4 +140,14 @@ int write_f(char* path,FILE* fp){
 	fputs(w, fp);
 	
 	
+}
+int supp_f(char* path,int info){
+	if (remove(path)==0)
+		
+		printf("Suppression du fichier %s \n ",path);
+		
+    else
+        printf("impossible de supprimer le fichier %s \n ",path);
+ 
+    return 0;
 }
